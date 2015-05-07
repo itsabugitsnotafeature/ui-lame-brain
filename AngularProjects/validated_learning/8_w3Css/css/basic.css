@@ -1,0 +1,189 @@
+
+h3 {
+    color: maroon;
+    margin-left: 40px;
+    font-family: "Lucida Console", Times, serif;
+    font-style: oblique;
+    /*font-size: 30px;*/
+    font-size: 2em;  /*32px=2em*16 */
+    /*font-size: 200%;*/
+} 
+
+body {
+    background-color: linen;
+}
+
+ p {
+ 	/*Defining basic P tag CSS Style*/
+ 	color:red;
+ 	text-align:center;
+ 	font-family: "Times New Roman", Times, serif;
+ }
+
+
+/*
+ ID : ;
+ The id selector uses the id 
+ attribute of an HTML element 
+ to select a specific element.
+*/
+#leftred {
+    text-align:left;
+    color: red;
+} 
+
+
+/*
+CLASS :
+The class selector selects 
+elements with a specific 
+class attribute.
+To select elements with 
+a specific class, write a 
+period character, followed 
+by the name of the class:
+
+NOTE : Do NOT start a class name with a number!
+*/
+
+.rightred {
+    text-align:right;
+    color: red;
+}  
+
+
+				/*		NOTES FROM W3 SCHOOLS . COM 		*/
+
+/*CSS selectors are 
+used to "find" (or select) HTML 
+elements based on their 
+id, class, type, attribute, and more.
+*/
+
+/*
+Multiple Style Sheets
+If some properties have been set for the same selector in different 
+style sheets, the values will be inherited from the more specific style sheet. 
+*/
+
+
+/*
+What style will be used when there is more than one style specified for an HTML element?
+
+All the styles will "cascade" into a new "virtual" 
+style sheet by the following rules, where number four has the highest priority:
+    1.Browser default
+    2.External style sheet
+    3.Internal style sheet (in the head section)
+    4.Inline style (inside an HTML element)
+Inline style (inside an HTML element) has the highest priority,
+it will override a style defined inside the <head> tag, 
+or in an external style sheet, 
+or in a browser (a default value).
+
+Note: If the link to the external style sheet is placed after
+the internal style sheet in HTML <head>, 
+the external style sheet will override the internal style sheet!
+*/
+
+/*
+CSS properties used for background effects:
+    background-color
+	    Color is most often specified by:
+		    a HEX value - like "#ff0000"
+		    an RGB value - like "rgb(255,0,0)"
+		    a color name - like "red"
+    background-image
+    	Specifies an image to use as the background of an element.
+    	By default, the image is repeated so it covers the entire element.
+    		Note: repeat image vertically 	" background-repeat: repeat-y "
+    			  repeat horizontally 		" background-repeat: repeat-x "
+    			  No repeat 		 		" background-repeat: no-repeat "
+    background-attachment
+    background-position
+    	The position of the image is specified by the background-position property.
+    	Example :							" background-position: right top "
+
+    It is also possible to specify all the properties in one single property. 
+    This is called a shorthand property.
+    For Example : 
+    	 body {
+		    background: #ffffff url("img_tree.png") no-repeat right top;
+				}
+	When using the shorthand property the order of the property values is:
+	    background-color
+	    background-image
+	    background-repeat
+	    background-attachment
+	    background-position
+*/
+
+
+/*
+All CSS Text Properties
+	Property 				Description
+	color 				Sets the color of text
+	direction 			Specifies the text direction/writing direction
+	letter-spacing 		Increases or decreases the space between characters in a text
+	line-height 		Sets the line height
+	text-align 			Specifies the horizontal alignment of text
+	text-decoration 	Specifies the decoration added to text [Underline / not underline]
+	text-indent 		Specifies the indentation of the first line in a text-block
+	text-shadow 		Specifies the shadow effect added to text
+	text-transform 		Controls the capitalization of text
+	unicode-bidi 		Used together with the direction property to set or return 
+						whether the text should be overridden to support 
+						multiple languages in the same document.
+	vertical-align 		Sets the vertical alignment of an element
+	white-space 		Specifies how white-space inside an element is handled
+	word-spacing 		Increases or decreases the space between words in a text
+*/
+/*
+All CSS Font Properties
+	Property 			Description
+	font 			Sets all the font properties in one declaration
+	font-family 	Specifies the font family for text
+	font-size 		Specifies the font size of text
+	font-style 		Specifies the font style for text
+	font-variant 	Specifies whether or not a text should be displayed in a small-caps font
+	font-weight 	Specifies the weight of a font
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

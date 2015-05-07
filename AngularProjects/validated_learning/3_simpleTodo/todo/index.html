@@ -1,0 +1,66 @@
+<!DOCTYPE html5>
+<html ng-app="Todo" >
+<head>
+    <title>Obligatory Angular Todo App</title>
+
+    <style>
+        .done {
+            text-decoration: line-through;
+            color:gainsboro;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div ng-controller="toDoController">
+        <form name="frm" ng-submit="addToDo()">
+            <input type="text" name="newToDo" ng-model="newToDo" required />
+            <button ng-disabled="frm.$invalid">Go</button>
+        </form>
+        <button ng-click="clearToDo()">Clear Completed</button>
+
+        <ul>
+            <li ng-repeat="todo in todos">
+                <input type="checkbox" ng-model="todo.done" />
+                <span ng-class="{'done':todo.done }" >{{todo.title}}</span>
+
+            </li>
+        </ul>
+
+    </div>
+
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"> </script>
+
+    <script>
+        var myTodoApp = angular.module('Todo',[]);
+
+        myTodoApp.controller('toDoController',[ '$scope',function($scope){
+            $scope.todos = [
+                {'title':'Build a todo app','done':false}
+            ];
+
+            $scope.addToDo = function(){
+                $scope.todos.push({'title':$scope.newToDo, 'done':false});
+                $scope.newToDo = '';
+            };
+
+            $scope.clearToDo = function(){
+                $scope.todos = $scope.todos.filter(function(item){
+                    return !item.done;
+                })
+
+            };
+
+
+        }]);
+
+    </script>
+
+</body>
+</html>

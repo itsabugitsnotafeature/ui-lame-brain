@@ -1,0 +1,270 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <link rel="stylesheet" href="myStyle.css">
+        <title>Youdizzle "Pg" Title</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <a href="#footer">GoToBOTTOM</a>
+        <h1 > <a id="goToTop">Heading H1 </a></h1>   <h2 style="text-align:center"> Heading H2 </h2>   <h3> Heading <br /> H3 </h3>
+        <p id="p01" title='Added "Youdizzle" tooltip'>This is a paragraph1.</p>
+        <P>This is a paragraph2.</P>
+        <p class="error">This is a<br> paragraph3.</P>
+        <p><var>E</var> = <var>m</var> <var>c</var><sup>2</sup></p>
+        <a href="http://www.reddit.com/" target="_blank"> _LOL_!! REDDIT !!_LOL_ </a>
+        <br>
+        <a href="http://www.reddit.com/" target="_blank">
+            <img title = "Dont Click" src="http://i.imgur.com/YXhDlln.jpg" alt="DUMMY" width="500" height="500" >
+            <!--<map name="catMap">-->
+            <!--Incorrect Map But you get the idea-->
+            <!--<area shape="rect" coords="0,0,82,126" alt="Sun" href="http://www.reddit.com/">-->
+            <!--<area shape="circle" coords="90,58,3" alt="Mercury" href="http://www.reddit.com/">-->
+            <!--<area shape="circle" coords="124,58,8" alt="Venus" href="http://www.reddit.com/">-->
+            <!--</map>-->
+        </a>
+        <br><br>
+        <img title="Hovering huh!" src="http://www.w3schools.com/html/pic_mountain.jpg" alt="pic_mountain" style="float:width:304px;height:228px;">
+        <br><br><br>
+        <table id="t01" style="width:50%">
+            <caption>Monthly savings</caption>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>Eve</td>
+                <td>Jackson</td>
+                <td>94</td>
+            </tr>
+            <tr>
+                <td>John</td>
+                <td>Doe</td>
+                <td>80</td>
+            </tr>
+        </table>
+        <div class="cities">
+            <dl>
+                <dt>Coffee</dt>
+                <dd>- black hot drink</dd>
+                <dt>Milk</dt>
+                <dd>- white cold drink</dd>
+            </dl>
+        </div>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>W3Schools Demo</h1>
+                <p>Resize this responsive page!</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>London</h2>
+                    <p>London is the capital city of England.</p>
+                    <p>It is the most populous city in the United Kingdom,
+                    with a metropolitan area of over 13 million inhabitants.</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Paris</h2>
+                    <p>Paris is the capital and most populous city of France.</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Tokyo</h2>
+                    <p>Tokyo is the capital of Japan, the center of the Greater Tokyo Area,
+                    and the most populous metropolitan area in the world.</p>
+                </div>
+            </div>
+        </div>
+        <iframe src="http://www.w3schools.com" width="500" height="500"></iframe>
+        <p id="demo"></p>
+        <script>
+        document.getElementById("demo").innerHTML = "Hello JavaScript!";
+        </script>
+        <p>I will display &euro;</p>
+        <p>I will display &#8364;</p>
+        <p>I will display &#x20AC;</p>
+
+
+        <form action="action_page.php" method="GET" target="_blank" accept-charset="UTF-8"
+              enctype="application/x-www-form-urlencoded" autocomplete="off" novalidate>
+            <fieldset>
+            <legend>Personal information:</legend>
+                First name:<br>
+                <input type="text" name="firstname">
+                <br>
+                Last name:<br>
+                <input type="password" name="lastname">
+
+                <br>
+                <input type="checkbox" name="vehicle" value="Bike">I have a bike
+                <br>
+                <input type="checkbox" name="vehicle" value="Car">I have a car
+                <br>
+                <input type="radio" name="sex" value="male" checked>Male
+                <br>
+                <input type="radio" name="sex" value="female">Female
+                <br>
+                <br>
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+        <button type="button" onclick="alert('Hello World!')">Click Me!</button>
+
+        <br><br>
+        <p><b>Note:</b> How confused are you right now?.</p>
+        <form>
+            <input list="confusionScale" name="magConfused">
+                <datalist id="confusionScale">
+                    <option value="Crystal clear">
+                    <option value="Maybe have a doubt">
+                    <option value="wait.. What ?">
+                    <option value="What the Hell !! ">
+                    <option value="Lol, whatever">
+                </datalist>
+            <button type="button" onclick="alert('Okay - cant read your value')">Submit</button>
+            <!--<input type="submit">-->
+        </form>
+
+        <br><br>
+        <form action="action_page.php"
+              oninput="x.value=parseInt(a.value)+parseInt(b.value)">
+            0
+            <input type="range" id="a" name="a" value="50">
+            100 +
+            <input type="number" id="b" name="b" value="50">
+            =
+            <output name="x" for="a b"></output>
+            <br><br>
+            <input type="submit" size="400">
+        </form>
+
+
+
+        <p>
+            Depending on browser support:<br>
+            Numeric restrictions will apply in the input field.
+        </p>
+
+        <form action="action_page.php">
+            Quantity (between 1 and 5):
+            <input type="number" name="quantity" min="1" max="5">
+            <input type="submit">
+        </form>
+
+        <form>
+            Birthday:
+            <input type="date" name="bday">
+        </form>
+
+
+        <form>
+            Select your favorite color:
+            <input type="color" name="favcolor">
+        </form>
+
+        <form>
+            <input type="range" name="points" min="0" max="10">
+        </form>
+
+        <form>
+            Birthday (month and year):
+            <input type="month" name="bdaymonth">
+        </form>
+
+        <form>
+            Select a week:
+            <input type="week" name="week_year">
+        </form>
+
+        <form>
+            Select a time:
+            <input type="time" name="usr_time">
+        </form>
+
+        <form>
+            Birthday (date and time):
+            <input type="datetime" name="bdaytime">
+        </form>
+
+        <form>
+            Birthday (date and time):
+            <input type="datetime-local" name="bdaytime">
+        </form>
+
+        <form>
+            E-mail:
+            <input type="email" name="email">
+        </form>
+
+        <form>
+            Search Google:
+            <input type="search" name="googlesearch">
+        </form>
+
+        <form>
+            Telephone:
+            <input type="tel" name="usrtel">
+        </form>
+
+        <form>
+            Add your homepage:
+            <input type="url" name="homepage">
+        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <br><br><br>
+        <a href="#goToTop">GoToDaTop</a>
+        <br><br><br>
+        <div id="footer">
+            Copyright ItsAFeatureItsNotABug.com
+        </div>
+        <br>
+    </body>
+</html>
