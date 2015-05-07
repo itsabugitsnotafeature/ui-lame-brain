@@ -1,0 +1,36 @@
+
+<div>
+	<div class="page-footer">
+		<!-- Page Footer Here -->
+		<footer>
+			<nav id="pageFooter">
+				<ul>
+					<li><a ui-sref="about">About</a></li>
+					<li><a ui-sref="indexHome">Home</a></li>
+				</ul>
+				<ul>
+					<li><a href="/iconathon/">Iconathon_NO</a></li>
+					<li><a href="/upload/">Upload_NO</a></li>
+				</ul>
+				<ul>
+					<li><a href="/developers/">Developers_NO</a></li>
+					<li><a ui-sref="blog">Blog</a></li>
+				</ul>
+				<ul>
+					<li><a href="mailto:itsafeatureitsnotabug@gmail.com" class="email">Email</a></li>
+					<li><a href="https://thenounproject.zendesk.com/hc/en-us" target="_blank">Feedback_NO</a></li>
+				</ul>
+				
+				
+				<div>
+					<a ui-sref="indexHome">Copyright ItsAFeatureItsNotABug</a>
+				</div>
+				<p>&copy; 2015 Its a feature, Its not a Bug ! </p>
+
+			</nav>
+			
+			
+		</footer>
+		<!-- End of Footer -->
+	</div>
+</div>

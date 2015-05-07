@@ -1,0 +1,15 @@
+
+<h2>This is the partial todo app.</h2>
+<div ng-controller="ToDoController">
+	<form name="frm" ng-submit="addToDo()">
+		<input type="text" name="newToDo" ng-model="newToDo" required />
+		<button ng-disabled="frm.$invalid">Go</button>
+	</form>
+	<button ng-click="clearToDo()">Clear Completed</button>
+	<ul>
+		<li ng-repeat="todo in todos">
+			<input type="checkbox" ng-model="todo.done" />
+			<span ng-class="{'done':todo.done }" >{{todo.title}}</span>
+		</li>
+	</ul>
+</div>
