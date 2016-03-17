@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="hello-world" attributes="name">
+	<template>
+		<style>
+   		/*	li {
+   				font-family: sans-serif;
+   				text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+   			}*/
+   		</style>
+		<ul>
+			<li>Hello '{{name}}'</li>
+			<template is="dom-repeat" items="{{names}}">
+				<li>Hello '{{item.name}}'</li>
+			</template>
+			<ul>
+	</template>
+	<script>
+		Polymer ({
+			is: "hello-world",
+			ready: function() {
+				this.names = [
+				{
+					name : 'This Bug Dizzles'
+				},{
+					name : 'Its A Bug'
+				},{
+					name : 'Its Not A Feature'
+				}
+				]
+			},
+			properties: 
+			{
+			    name: {
+			     type: String,
+			     value: 'World'
+			    }
+			}
+
+		});
+	</script>
+</dom-module>﻿
