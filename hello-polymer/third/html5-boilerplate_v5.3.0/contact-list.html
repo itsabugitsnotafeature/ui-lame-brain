@@ -1,40 +1,25 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="contact-listing.html">
 
 <dom-module id="contact-list">
 	<style>
 		ul {
 			list-style: none;
 		}
-		li {
-			display: flex;
-			padding: 20px; 
-		}
-		li img {
-			border-radius: 50%;
-			margin-right: 10px;
-			height: 85px;
-		}
 		li + li {
 			border-top: solid 1px #666;
-		}
-
-		h3 {
-			margin: 0 40px 0 0;
-			line-height: 80px;
-		}
-		li span {
-			line-height: 80px;
 		}
 	</style>
 
 	<template>
-
+		
 		<ul>
 			<template is="dom-repeat" items="{{contacts}}" >
 				<li>
-					<img src="{{item.img}}">
-					<h3>{{item.name}}</h3>
-					<span>{{item.email}}</span>
+					<contact-listing name="{{item.name}}" 
+									 img="{{item.img}}"
+									 email="{{item.email}}">
+					</contact-listing>
 				</li>	
 			</template>
 		</ul>
