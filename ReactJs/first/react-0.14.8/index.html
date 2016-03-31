@@ -9,15 +9,77 @@
 	<body>
 		<div id="area" ></div>
 		<script type="text/babel">
+
 			var HelloWorld = React.createClass({
+
+				propTypes: {
+					name: React.PropTypes.string,
+					isPerson: React.PropTypes.bool
+				}, 
+
+				getDefaultProps: function() {
+					return {
+						name: 'Default_ItsABug'
+					}
+				},
+
+				getInitialState: function() {
+					return {
+						value: 1
+					}
+				},
+
+				componentDidMount: function() {
+					
+				},
+
+				_addByOne: function() {
+					console.log('click');
+					this.setState({
+						value: this.state.value + 1
+					});
+				},
+
+
 				render: function() {
+					var greeting = "World";
+
+					if(this.props.isPerson){
+						greeting = (<Person name={this.props.name}/>)
+					}
+
 					return (
-						<h1>Hello World !</h1>
+						<div>
+							<h1>Hello {greeting} !</h1>
+							{this.state.value}
+							<button onClick={this._addByOne} >Click Me</button>
+						</div>
 					)
 				}
 			});
+
+			var Person = React.createClass({
+
+				propTypes: {
+					name: React.PropTypes.string.isRequired
+				}, 
+
+				getDefaultProps: function() {
+					return {
+						name: 'Default_ItsABug'
+					}
+				},
+
+				render: function() {
+					return (
+						<span>{this.props.name}</span>
+					)
+				}
+			});
+
+
 			ReactDOM.render(
-				<HelloWorld/>,
+				<HelloWorld  name="ItsABug" isPerson={true} />,
 				document.getElementById('area')
 			);
 		</script>
