@@ -1,0 +1,21 @@
+{
+  "name": "PizzaToppings",
+  "homepage": "https://github.com/itsabugitsnotafeature/ui-lame-brain",
+  "authors": [
+    "itsabugitsnotafeature <itsabugitsnotafeature@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.4.0"
+  }
+}
