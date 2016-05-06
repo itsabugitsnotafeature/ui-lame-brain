@@ -1,0 +1,18 @@
+<link src="../bower_components/polymer/polymer.html"></link>
+
+<dom-module name="x-pizza-toppings" attributes="ingredients name"> 
+
+	<template>
+		<dir>
+			<select id="ingredients" value="{{current::change}}">
+				<option value="" >Choose and ingredient</option>
+				<template is="dom-repeat" items="{{ingredients}}" ></template>
+				<option>{{item}}</option>
+			</select>
+			<button id="add" on-click="add" type="button" >
+				Add <span>{{lable}}</span>
+			</button>
+		</dir>
+	</template>
+	<script src="x-pizza-toppings.js"></script>
+</dom-module>
