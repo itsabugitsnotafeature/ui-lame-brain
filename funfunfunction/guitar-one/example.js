@@ -8,7 +8,7 @@ class Funfunfunctions {
 	}
 
 	show(showObj) {
-		console.log("\n\n\t ***** :: Showing :: *****\n " + showObj)
+		console.log("\n\n\t ***** :: Showing :: *****\n " + this.flatten(showObj) )
 	}
 
 }
@@ -40,18 +40,91 @@ let isDog = function(animal) {
 }
 
 /*
-	Implementation # 1
+	Implementation Filter # 1
 */
-let dogs = animals.filter( function(eachAnimal) {
+let dogs = animals.filter( (eachAnimal) => {
 	return eachAnimal.species === 'dog'
 })
 
 /*
-	Implementation # 2
+	Implementation Filter # 2
 */
 let alsoDogs = animals.filter(isDog)
 
+// fun.show(animals)
+// fun.show(dogs)
+// fun.show(alsoDogs)
 
-fun.show(fun.flatten(animals))
-fun.show(fun.flatten(dogs))
-fun.show(fun.flatten(alsoDogs))
+
+
+/*
+	Implementation MAP # 1
+*/
+
+// let names = animals.map( function (eachAnimal){
+// 	return eachAnimal.name + " is a " + eachAnimal.species
+// })
+// let names = animals.map( function (eachAnimal){ return eachAnimal.name + " is a " + eachAnimal.species })
+// let names = animals.map( (eachAnimal) => { return eachAnimal.name + " is a " + eachAnimal.species })
+let names = animals.map( (eachAnimal) => eachAnimal.name + " is a " + eachAnimal.species )
+
+fun.show(names)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

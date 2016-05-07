@@ -7,7 +7,7 @@
 	Example : Filter , Map etc etc
 
 
-## Filter 
+### Filter 
 	Consider example :
 		let dogs = animals.filter(function(animals){
 				return animals.species === 'dog'
@@ -22,3 +22,8 @@
 
 	Filter will then expect the CALLBACK to return either a TRUE or FALSE, to tell teh filter function weather that ITEM will be into the NEW-FILTERED-ARRAY.
 
+
+### MAP
+	It goes throug hhe array and transforms them.
+	MAP expects the callback function to return a transormed object. 
+	This CALLBACL object, or return object, does not necessarily habe to be the subset of the existing object. It can be ANY object.
