@@ -1,0 +1,11 @@
+Airi Satou	Accountant	$627
+Airi Satou	Accountant	$12700
+Airi Satou	Accountant	$1620
+Cara Stevens	Sales Assistant	$14560
+Cara Stevens	Pales Assistant	$14
+Cara Stevens	Tales Assistant	$1400
+Cara Stevens	Kales Assistant	$1400
+Masa Hari	Software Developer	$65436
+Masa Hari	Polpus Developer	$5432
+Masa Hari	Lotus Developer	$254
+Masa Hari	Potus Developer	$765
