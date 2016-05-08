@@ -43,5 +43,36 @@
 
 ### REDUCE
 	It is the multi-tool of list transformation
+	
 	It is a fall-back list transsformation, if you can not find any pre-build list tranformation.
+	
 	It can reduce it to any thing. Can be a number, list, array or a complex onject
+
+
+### CURRYING / CURRY Functions
+	Kind of functions who do NOT need all of its arguements up front.
+	Instead it wants you to give it the firs targuement, and then the function returns another function.
+		The returned function, now gets the second arguement, which inturn returns another function.
+			Then we provide the third arguement.. 
+				... and so on.
+	In our implementation, we have written a function in such a way that it is CURRYABLE.
+		BUT, 
+		Every functional library has a way of making non-currable functions CURRYABLE.
+
+	For this example, we will use loadsh.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

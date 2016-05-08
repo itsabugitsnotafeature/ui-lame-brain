@@ -1,6 +1,9 @@
 "use strict";
 
 let fs = require("fs")
+let _ = require ("lodash")
+
+
 
 class Funfunfunctions {
 	constructor() {}
@@ -125,15 +128,36 @@ let output = fs.readFileSync(path,'utf8')
 				}, {} )
 
 
-console.log('output', JSON.stringify(output, null, 2))
+// console.log('output', JSON.stringify(output, null, 2))
 
 
+/*
+	Implementation CURRY FUNCTIONS # 1
+*/
+
+let dragon = (name, size, element) =>
+	name + ' is a ' +
+	size + ' dragon that breathes ' + 
+	element + ' !'
+
+let newDragon = 
+	name =>
+		size=> 
+			element=>
+				name + ' is a ' +
+				size + ' dragon that breathes ' + 
+				element + ' !'
+
+let curryedDragon = _.curry(dragon)
 
 
-
-
-
-
+fun.print(dragon('Ted', 'Medium' , 'Petrolium'))
+fun.print(
+		newDragon('Fluffykins')('Tiny')('Lightening')
+	)
+fun.print(
+		curryedDragon('Curryed fluff')('Major')('Water')
+	)
 
 
 
