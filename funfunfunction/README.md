@@ -51,6 +51,7 @@
 
 ### CURRYING / CURRY Functions
 	Kind of functions who do NOT need all of its arguements up front.
+	
 	Instead it wants you to give it the firs targuement, and then the function returns another function.
 		The returned function, now gets the second arguement, which inturn returns another function.
 			Then we provide the third arguement.. 
