@@ -1,0 +1,66 @@
+.profile-img {
+  border-radius: 999px;
+  height: 500px;
+  width: 500px;
+  border: 5px solid seagreen; }
+
+.button, .jumbo-button, .light-button {
+  background: #FFFFC3;
+  border-radius: 8px;
+  color: #4AC6B7;
+  display: inline-block;
+  padding: 5px;
+  text-decoration: none; }
+
+.jumbo-button {
+  padding: 35px; }
+
+.light-button {
+  background: white; }
+
+.panel, .little-panel, .big-panel {
+  border: 3px solid dodgerblue;
+  background: #FFDE68;
+  margin: 10px; }
+
+.little-panel {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 5px; }
+
+.big-panel {
+  -webkit-border-radius: 55px;
+  -moz-border-radius: 55px;
+  -ms-border-radius: 55px;
+  border-radius: 55px;
+  font-size: 32px;
+  padding: 20px; }
+
+body {
+  background: #5CA9FF; }
+
+nav ul {
+  background: #7C6FFF;
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+nav li {
+  display: inline-block; }
+nav a {
+  color: #FCFF90;
+  display: inline-block;
+  padding: 10px 16px;
+  text-decoration: none; }
+nav a:hover {
+  background: #hover-color; }
+
+h1 {
+  color: #FCFF90; }
+
+p {
+  color: #FCFF90; }
+
+/*# sourceMappingURL=main.css.map */
