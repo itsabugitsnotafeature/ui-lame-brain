@@ -44,40 +44,63 @@
   </template>
 
   <script>
+    var _websocketId         = null;
+    var _websocketURLRedux   = '';
+    var _clientMsgRedux      = '';
+    
+
     Polymer({
 
       is: 'ws-component',
 
-      properties: {
-        prop1: {
-          type: String,
-          value: 'ws-component',
-        },
-      },
-
+      // properties: {
+      //   _websocketId: {
+      //     type: Object,
+      //     value: _websocketIdGlobal,
+      //   },
+      //   _websocketURLRedux: {
+      //     type: String,
+      //     value: _websocketURLReduxGlobal,
+      //   },
+      //   _clientMsgRedux: {
+      //     type: String,
+      //     value: _clientMsgReduxGlobal,
+      //   },
+      // },
 
       ready: function() {
         // Initialize  Redux  Store
         function reducer(state, action){
-          if (!state) return {  
+          if (!state) return {
+            ws_id  : '',
             ws_url : '',
             ws_msg : '' 
           };
 
           switch (action.type) {
             case 'SEND_WS_MESSAGE':
+            action.ws_id.send(action.msg)
             return {
+              ws_id  : action.ws_id,
+              ws_url : '',
               ws_msg   : action.msg
             }
             break;
+            
             case 'CONNECT_WS':
             return {
-              ws_url   : action.url
+              ws_id    : new WebSocket(action.url),
+              ws_url   : action.url,
+              ws_msg   : ''
             }
             break;
+            
             case 'DISCONNECT_WS':
+            action.ws_id.close()
             return {
-              ws_url   : action.url
+              ws_id    : null,
+              ws_url   : '',
+              ws_msg   : ''
             }
             break;
 
@@ -90,93 +113,92 @@
 
         // Subscribe Variables
         store.subscribe(function(){
-          this.websocketURLRedux   = store.getState().ws_url;
-          this.clientMsgRedux      = store.getState().ws_msg;
+          _websocketId         = store.getState().ws_id;
+          _websocketURLRedux   = store.getState().ws_url;
+          _clientMsgRedux      = store.getState().ws_msg;
         })
       },
 
 
-      connectSocket: function(e) {
+      connectSocket: function() {
         console.log("Arrived at connectSocket.");
+        var that = this;
         var protocol = "ws://";
-
-        store.dispatch(
-          this.actions.connectWs(document.getElementById("websocket-url").getAttribute("value") + "/")
-        )
-
         if(window.location.protocol == "https:") {
           protocol = "wss://";
         }
 
-        var urlValue = document.getElementById("websocket-url").getAttribute("value") + "/";
+        var urlValue = protocol + document.getElementById("websocket-url").getAttribute("value") + "/";
 
-        socket = new WebSocket(protocol + urlValue);
+        store.dispatch(
+          that.actions.connectWs(_websocketId, urlValue)
+        )
 
-        socket.addEventListener("open", function(event) {
+        _websocketId.addEventListener("open", function(event) {
           console.log(" Socket Connected ! ");
           message.textContent = message.textContent + " Socket Connected ! " + "\n";
         });
 
         // Display messages received from the server
-        socket.addEventListener("message", function(event) {
+        _websocketId.addEventListener("message", function(event) {
           message.textContent = message.textContent + "Server Says: " + event.data + "\n";
           console.log(" Socket Message : " + message.textContent );
         });
 
         // Display any errors that occur
-        socket.addEventListener("error", function(event) {
+        _websocketId.addEventListener("error", function(event) {
           console.log(" Socket ERRORRRRRR ");
         });
 
-        socket.addEventListener("close", function(event) {
+        _websocketId.addEventListener("close", function(event) {
           console.log(" Socket CLOSED !!!!!!!! ");
         });
-
-
       },
 
       disconnectSocket: function() {
-        console.log("Closing message over socket");
-        socket.close();
+        return (_websocketId === null);
+        console.log("Closing message over socket") ;
         message.textContent = message.textContent + "Socket Closed at :" + Date.now().toString() + "\n";
 
         store.dispatch(
-          this.actions.disconnectWs()
+          this.actions.disconnectWs(_websocketId)
         )
 
       },
 
-      sendMessage: function(e) {
+      sendMessage: function() {
+        return (_websocketId === null);
         console.log("Sending message over socket");
+        
         var chatMessage = document.getElementById('chat-msg').value
         var socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
 
-        socket.send(socketPayload);
         message.textContent = message.textContent + "Client Says: " + socketPayload + "\n";
 
         store.dispatch(
-          this.actions.sendWsMsg(socketPayload)
+          this.actions.sendWsMsg( _websocketId, socketPayload)
         )
-
       },
 
       actions: {
-        sendWsMsg: function(wsMessage) {
+        sendWsMsg: function(ws, wsMessage) {
           return {
             type: 'SEND_WS_MESSAGE',
+            ws_id: ws,
             msg: wsMessage
           };
         },
-        connectWs: function(url) {
+        connectWs: function(ws, url) {
           return {
             type: 'CONNECT_WS',
+            ws_id: ws,
             url: url
           };
         },
-        disconnectWs: function() {
+        disconnectWs: function(ws) {
           return {
             type: 'DISCONNECT_WS',
-            url: ''
+            ws_id: ws
           };
         },
       },
