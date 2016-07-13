@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>ws-component test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../ws-component.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <ws-component></ws-component>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('ws-component', function() {
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'ws-component');
+        });
+
+      });
+    </script>
+  </body>
+</html>
