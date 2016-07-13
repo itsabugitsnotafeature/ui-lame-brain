@@ -53,21 +53,6 @@
 
       is: 'ws-component',
 
-      // properties: {
-      //   _websocketId: {
-      //     type: Object,
-      //     value: _websocketIdGlobal,
-      //   },
-      //   _websocketURLRedux: {
-      //     type: String,
-      //     value: _websocketURLReduxGlobal,
-      //   },
-      //   _clientMsgRedux: {
-      //     type: String,
-      //     value: _clientMsgReduxGlobal,
-      //   },
-      // },
-
       ready: function() {
         // Initialize  Redux  Store
         function reducer(state, action){
@@ -127,7 +112,6 @@
         if(window.location.protocol == "https:") {
           protocol = "wss://";
         }
-
         var urlValue = protocol + document.getElementById("websocket-url").getAttribute("value") + "/";
 
         store.dispatch(
@@ -135,49 +119,60 @@
         )
 
         _websocketId.addEventListener("open", function(event) {
-          console.log(" Socket Connected ! ");
-          message.textContent = message.textContent + " Socket Connected ! " + "\n";
+          that.displayMessage("Socket Connected !");
         });
 
         // Display messages received from the server
         _websocketId.addEventListener("message", function(event) {
-          message.textContent = message.textContent + "Server Says: " + event.data + "\n";
-          console.log(" Socket Message : " + message.textContent );
+          that.displayMessage("Server : " + event.data);
         });
 
         // Display any errors that occur
         _websocketId.addEventListener("error", function(event) {
-          console.log(" Socket ERRORRRRRR ");
+          that.displayMessage("Socket ERROR !");
         });
 
         _websocketId.addEventListener("close", function(event) {
-          console.log(" Socket CLOSED !!!!!!!! ");
+          that.displayMessage("Socket CLOSED !!!!!!!!  ");
         });
       },
 
       disconnectSocket: function() {
-        return (_websocketId === null);
+        var that = this;
+        if(_websocketId === null){
+          that.displayMessage("No Socket Connection Detected !");
+          return;
+        }
+        var that = this;
         console.log("Closing message over socket") ;
-        message.textContent = message.textContent + "Socket Closed at :" + Date.now().toString() + "\n";
-
+        
         store.dispatch(
-          this.actions.disconnectWs(_websocketId)
+          that.actions.disconnectWs(_websocketId)
         )
-
+        that.displayMessage("Socket Closed at :" + Date.now().toString());
       },
 
       sendMessage: function() {
-        return (_websocketId === null);
+        var that = this;
+        if(_websocketId === null){
+          that.displayMessage("No Socket Connection Detected !");
+          return;
+        }
+        var that = this;
         console.log("Sending message over socket");
         
         var chatMessage = document.getElementById('chat-msg').value
-        var socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
+        var socketPayload = "Client :" + chatMessage +  " | Sent at :" + Date.now().toString();
 
-        message.textContent = message.textContent + "Client Says: " + socketPayload + "\n";
+        that.displayMessage(socketPayload)
 
         store.dispatch(
-          this.actions.sendWsMsg( _websocketId, socketPayload)
+          that.actions.sendWsMsg( _websocketId, socketPayload)
         )
+      },
+
+      displayMessage: function(msg) {
+        message.textContent = message.textContent + msg + "\n";
       },
 
       actions: {
