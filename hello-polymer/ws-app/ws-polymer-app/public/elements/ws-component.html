@@ -1,0 +1,186 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script src="https://npmcdn.com/redux@latest/dist/redux.min.js"></script>
+
+<dom-module id="ws-component">
+  <template>
+    <style>
+      button {
+        margin-top: 5px;
+        margin-left: 1px;
+      }
+
+      input {
+        width: auto;
+        margin: 3px;
+        padding: 2px;
+      }
+
+      textarea {
+        width: 350px;
+        height: 300px;
+        font-family: Consolas, fixed;
+      }
+
+    </style>
+    <h2>Native Websocket Elem </h2>
+
+    <div>
+      <!-- Status: <span id="status"></span><br /> -->
+      
+      <button id="open" on-click="connectSocket">Connect</button>
+      &nbsp;&nbsp;URL: <input id="websocket-url" type="text" value="localhost:8000" />
+
+      <br/>
+      <br/>
+      <button on-click="disconnectSocket" >Disconnect</button>
+      <button on-click="sendMessage">Send</button>
+      <input id="chat-msg" type="text" />
+
+      <br/>
+      <br/>
+      <textarea class="socketMessage" id="message"></textarea>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'ws-component',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'ws-component',
+        },
+      },
+
+
+      ready: function() {
+        // Initialize  Redux  Store
+        function reducer(state, action){
+          if (!state) return {  
+            ws_url : '',
+            ws_msg : '' 
+          };
+
+          switch (action.type) {
+            case 'SEND_WS_MESSAGE':
+            return {
+              ws_msg   : action.msg
+            }
+            break;
+            case 'CONNECT_WS':
+            return {
+              ws_url   : action.url
+            }
+            break;
+            case 'DISCONNECT_WS':
+            return {
+              ws_url   : action.url
+            }
+            break;
+
+            default:
+            return state
+          }
+          return state;
+        }
+        store = Redux.createStore(reducer);
+
+        // Subscribe Variables
+        store.subscribe(function(){
+          this.websocketURLRedux   = store.getState().ws_url;
+          this.clientMsgRedux      = store.getState().ws_msg;
+        })
+      },
+
+
+      connectSocket: function(e) {
+        console.log("Arrived at connectSocket.");
+        var protocol = "ws://";
+
+        store.dispatch(
+          this.actions.connectWs(document.getElementById("websocket-url").getAttribute("value") + "/")
+        )
+
+        if(window.location.protocol == "https:") {
+          protocol = "wss://";
+        }
+
+        var urlValue = document.getElementById("websocket-url").getAttribute("value") + "/";
+
+        socket = new WebSocket(protocol + urlValue);
+
+        socket.addEventListener("open", function(event) {
+          console.log(" Socket Connected ! ");
+          message.textContent = message.textContent + " Socket Connected ! " + "\n";
+        });
+
+        // Display messages received from the server
+        socket.addEventListener("message", function(event) {
+          message.textContent = message.textContent + "Server Says: " + event.data + "\n";
+          console.log(" Socket Message : " + message.textContent );
+        });
+
+        // Display any errors that occur
+        socket.addEventListener("error", function(event) {
+          console.log(" Socket ERRORRRRRR ");
+        });
+
+        socket.addEventListener("close", function(event) {
+          console.log(" Socket CLOSED !!!!!!!! ");
+        });
+
+
+      },
+
+      disconnectSocket: function() {
+        console.log("Closing message over socket");
+        socket.close();
+        message.textContent = message.textContent + "Socket Closed at :" + Date.now().toString() + "\n";
+
+        store.dispatch(
+          this.actions.disconnectWs()
+        )
+
+      },
+
+      sendMessage: function(e) {
+        console.log("Sending message over socket");
+        var chatMessage = document.getElementById('chat-msg').value
+        var socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
+
+        socket.send(socketPayload);
+        message.textContent = message.textContent + "Client Says: " + socketPayload + "\n";
+
+        store.dispatch(
+          this.actions.sendWsMsg(socketPayload)
+        )
+
+      },
+
+      actions: {
+        sendWsMsg: function(wsMessage) {
+          return {
+            type: 'SEND_WS_MESSAGE',
+            msg: wsMessage
+          };
+        },
+        connectWs: function(url) {
+          return {
+            type: 'CONNECT_WS',
+            url: url
+          };
+        },
+        disconnectWs: function() {
+          return {
+            type: 'DISCONNECT_WS',
+            url: ''
+          };
+        },
+      },
+
+    });
+  </script>
+</dom-module>
