@@ -31,3 +31,5 @@ hello-polymer/ws-app/ws-polymer-app/public/bower_components
 hello-polymer/ws-app/ws-polymer-app/node_modules
 hello-polymer/ws-component/bower_components
 hello-polymer/ws-component/build
+.tmp/
+dist/
