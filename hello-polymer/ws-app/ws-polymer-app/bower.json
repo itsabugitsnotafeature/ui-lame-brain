@@ -2,7 +2,9 @@
   "name": "ws-component",
   "main": "ws-component.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "immutable": "^3.8.1",
+    "redux.min": "https://npmcdn.com/redux@latest/dist/redux.min.js"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
