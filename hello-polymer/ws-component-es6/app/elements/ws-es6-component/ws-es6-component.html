@@ -1,0 +1,42 @@
+<!--
+  
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+<dom-module id="ws-es6-component">
+  <template>
+    <style>
+        /* CSS Goes Here */
+    </style>
+
+    <h1>Websocekts</h1>
+    <p>Redux + Immutable + ES6 </p>
+    
+  </template>
+
+  <script>
+    /* TODO: create the Polymer element's definition in ES2015 */
+    class AwesomeMeme {
+      beforeRegister() {
+        this.is = 'ws-es6-component';
+        this.properties = {
+          prop1: {
+            type: String,
+            value: ''
+          }
+        };
+      }
+      created() {}
+      ready() {}
+      attached() {}
+      detached() {}
+      attributeChanged() {}
+    }
+
+    Polymer(AwesomeMeme);
+
+
+  </script>
+</dom-module>
