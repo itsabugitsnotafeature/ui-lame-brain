@@ -1,5 +1,5 @@
 <link rel="import" href="./bower_components/polymer/polymer.html">
-<script src="https://npmcdn.com/redux@latest/dist/redux.min.js"></script>
+<script src="./bower_components/redux/index.js"></script>
 
 <dom-module id="ws-component">
   <template>
@@ -28,7 +28,7 @@
       <!-- Status: <span id="status"></span><br /> -->
       
       <button id="open" on-click="connectSocket">Connect</button>
-      &nbsp;&nbsp;URL: <input id="websocket-url" type="text" value="localhost:5000" />
+      &nbsp;&nbsp;URL: <input id="websocket-url" type="text" value="localhost:8000" />
 
       <br/>
       <br/>
