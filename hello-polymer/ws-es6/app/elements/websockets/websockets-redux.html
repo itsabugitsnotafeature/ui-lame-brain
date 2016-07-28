@@ -65,22 +65,24 @@
       created() {
         // Define All Actions 
         this.wsMessageActions = {
-          sendWsMsg: (wsMessage) => {
+          sendWsMsg: (ws, wsMessage) => {
             return {
               type: 'SEND_WS_MESSAGE',
-              msg: wsMessage
+              wsId: ws,
+              wsMsg: wsMessage
             };
           },
-          connectWs: (url) => {
+          connectWs: (ws, url) => {
             return {
               type: 'CONNECT_WS',
-              url: url
+              wsId: ws,
+              wsUrl: url
             };
           },
-          disconnectWs: () => {
+          disconnectWs: (ws) => {
             return {
               type: 'DISCONNECT_WS',
-              url: ''
+              wsId: ws
             };
           },
         };
@@ -89,28 +91,42 @@
       ready() {
         let that = this;
         // Initialize  Redux  Store
-        function msgReducer(state = Immutable.List.of(), action){
+        function msgReducer(state = Immutable.Map({
+          wsId   : '',
+          wsUrl  : '',
+          wsMsg  : ''
+          }), action){
+
           switch (action.type) {
+
             case 'SEND_WS_MESSAGE':
-            return {
-              ws_msg   : action.msg
-            }
-            break;
+              action.wsId.send(action.wsMsg);
+              return {
+                wsId   : action.wsId,
+                wsUrl  : '',
+                wsMsg  : action.wsMsg
+              }
+              break;
 
             case 'CONNECT_WS':
-            return {
-              ws_url   : action.url
-            }
-            break;
+              return {
+                wsId   : new WebSocket(action.wsUrl),
+                wsUrl  : action.wsUrl,
+                wsMsg  : ''
+              }
+              break;
 
             case 'DISCONNECT_WS':
-            return {
-              ws_url   : action.url
-            }
-            break;
+              action.wsId.close();
+              return {
+                wsId   : null,
+                wsUrl  : '',
+                wsMsg  : ''
+              }
+              break;
 
             default:
-            return state
+              return state
           }
         }
 
@@ -125,10 +141,10 @@
 
         // Subscribe Variables
         store.subscribe(function(){
-          this.websocketURLRedux   = store.getState().ws_url;
-          this.clientMsgRedux      = store.getState().ws_msg;
+          _socketId   = store.getState().wsId;
+          _socketMsg  = store.getState().wsMsg;
+          _socketURL  = store.getState().wsUrl;
         })
-
       }
 
       attached(){
@@ -137,63 +153,76 @@
       }
 
       connectSocket() {
-        console.log("Arrived at connectSocket.");
+        let that = this;
         let protocol = "ws://";
+        console.log("Arrived at connectSocket.");
+        
         if(window.location.protocol == "https:") {
           protocol = "wss://";
         }
 
+        let urlValue = protocol + document.getElementById("websocket-url").getAttribute("value") + "/";
+
         store.dispatch(
-          this.wsMessageActions.connectWs(document.getElementById("websocket-url").getAttribute("value") + "/")
-        )
-
-
-        let urlValue = document.getElementById("websocket-url").getAttribute("value") + "/";
-
-        _socketId = new WebSocket(protocol + urlValue);
+          that.wsMessageActions.connectWs(_socketId, urlValue)
+          )
 
         _socketId.addEventListener("open", function(event) {
-          console.log(" Socket Connected ! ");
-          message.textContent = message.textContent + " Socket Connected ! " + "\n";
+          that.updateTextBox(" Socket Connected ! ");
         });
 
         // Display messages received from the server
         _socketId.addEventListener("message", function(event) {
-          message.textContent = message.textContent + "Server Says: " + event.data + "\n";
-          console.log(" Socket Message : " + message.textContent );
+          that.updateTextBox(event.data);
         });
 
         // Display any errors that occur
         _socketId.addEventListener("error", function(event) {
-          console.log(" Socket ERRORRRRRR ");
+          that.updateTextBox(" Socket ERRORRRRRR ");
         });
 
         _socketId.addEventListener("close", function(event) {
-          console.log(" Socket CLOSED !!!!!!!! ");
+          that.updateTextBox(" Socket CLOSED !!!!!!!! ");
         });
       }
 
       disconnectSocket() {
+        let that = this;
         console.log("Closing message over socket");
-        _socketId.close();
-        message.textContent = message.textContent + "Socket Closed at :" + Date.now().toString() + "\n";
+
+        if(_socketId === null ) {
+          that.updateTextBox("WARNING : No Active Socket Connection Detected !");
+          return;
+        }
         store.dispatch(
-          this.wsMessageActions.disconnectWs()
-          )
+          that.wsMessageActions.disconnectWs(_socketId)
+        )
+        that.updateTextBox("Web Socket Connection Closed at :" + Date.now().toString());
       }
 
       sendMessage() {
+        let that = this;
         console.log("Sending message over socket");
+
+        if(_socketId === null ) {
+          that.updateTextBox("WARNING : No Active Socket Connection Detected !");
+          return;
+        }
+
         let chatMessage = document.getElementById('chat-msg').value
         let socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
-        _socketId.send(socketPayload);
-        message.textContent = message.textContent + "Client Says: " + socketPayload + "\n";
+        
         store.dispatch(
-          this.wsMessageActions.sendWsMsg(socketPayload)
-          )
+          that.wsMessageActions.sendWsMsg( _socketId , socketPayload)
+        )
+        that.updateTextBox("Client Says: " + socketPayload);
+      }
+
+      updateTextBox(msg) {
+        message.textContent = message.textContent + msg + "\n";
       }
 
     }
     Polymer(WebsocketsRedux);
-    </script>
+  </script>
 </dom-module>
