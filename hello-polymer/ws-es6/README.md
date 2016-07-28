@@ -15,13 +15,14 @@ $ npm install ; bower install
 
 Command : 
 ```
-$ polymer serve
+$ gulp serve
 ```
 On Browser, hit 'http://localhost:5000'
 
 
 ## Running Tests
+Run Command : 
 
 ```
-# command 
+# 
 ```
