@@ -92,13 +92,12 @@
         let that = this;
         // Initialize  Redux  Store
         function msgReducer(state = Immutable.Map({
-          wsId   : '',
+          wsId   : null,
           wsUrl  : '',
           wsMsg  : ''
           }), action){
 
           switch (action.type) {
-
             case 'SEND_WS_MESSAGE':
               action.wsId.send(action.wsMsg);
               return {
@@ -109,7 +108,7 @@
               break;
 
             case 'CONNECT_WS':
-              return {
+                return {
                 wsId   : new WebSocket(action.wsUrl),
                 wsUrl  : action.wsUrl,
                 wsMsg  : ''
@@ -149,20 +148,23 @@
 
       attached(){
         let that = this;
-        that.connectSocket();
+        // that.connectSocket();
       }
 
       connectSocket() {
         let that = this;
         let protocol = "ws://";
         console.log("Arrived at connectSocket.");
+
+        if (_socketId != null) {
+          that.updateTextBox("Websocket already active brah !");
+          return ;
+        }
         
         if(window.location.protocol == "https:") {
           protocol = "wss://";
         }
-
         let urlValue = protocol + document.getElementById("websocket-url").getAttribute("value") + "/";
-
         store.dispatch(
           that.wsMessageActions.connectWs(_socketId, urlValue)
           )
@@ -173,7 +175,7 @@
 
         // Display messages received from the server
         _socketId.addEventListener("message", function(event) {
-          that.updateTextBox(event.data);
+          that.updateTextBox("WS Server Says: " + event.data);
         });
 
         // Display any errors that occur
