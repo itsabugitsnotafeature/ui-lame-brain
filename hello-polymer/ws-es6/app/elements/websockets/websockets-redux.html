@@ -184,6 +184,9 @@
         });
 
         _socketId.addEventListener("close", function(event) {
+          store.dispatch(
+            that.wsMessageActions.disconnectWs(_socketId)
+          )
           that.updateTextBox(" Socket CLOSED !!!!!!!! ");
         });
       }
