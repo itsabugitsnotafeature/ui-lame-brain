@@ -1,5 +1,6 @@
 <link rel="import" href="./bower_components/polymer/polymer.html">
 <script src="./bower_components/redux/index.js"></script>
+<script src="./bower_components/immutable/dist/immutable.js"></script>
 
 <dom-module id="ws-component">
   <template>
@@ -16,8 +17,8 @@
       }
 
       textarea {
-        width: 350px;
-        height: 300px;
+        width: 50%;
+        height: 280px;
         font-family: Consolas, fixed;
       }
 
@@ -44,143 +45,192 @@
   </template>
 
   <script>
-    Polymer({
-
-      is: 'ws-component',
-
-      properties: {
-        prop1: {
-          type: String,
-          value: 'ws-component',
-        },
-      },
+    let store;
+    let _socketId   = null;
+    let _socketMsg  = null;
+    let _socketURL  = null;
+    const MAX_MSG_HISTORY = 20;
 
 
-      ready: function() {
+    /* TODO: create the Polymer element's definition in ES2015 */
+    class WebsocketsRedux {
+
+      beforeRegister() {
+        this.is = 'ws-component';
+
+        this.properties = {
+        };
+      }
+
+      created() {
+        // Define All Actions 
+        this.wsMessageActions = {
+          sendWsMsg: (ws, wsMessage) => {
+            return {
+              type: 'SEND_WS_MESSAGE',
+              wsId: ws,
+              wsMsg: wsMessage
+            };
+          },
+          connectWs: (ws, url) => {
+            return {
+              type: 'CONNECT_WS',
+              wsId: ws,
+              wsUrl: url
+            };
+          },
+          disconnectWs: (ws) => {
+            return {
+              type: 'DISCONNECT_WS',
+              wsId: ws
+            };
+          },
+        };
+      }
+
+      ready() {
+        let that = this;
         // Initialize  Redux  Store
-        function reducer(state, action){
-          if (!state) return {  
-            ws_url : '',
-            ws_msg : '' 
-          };
+        function msgReducer(state = Immutable.Map({
+          wsId   : null,
+          wsUrl  : '',
+          wsMsg  : ''
+          }), action){
 
           switch (action.type) {
             case 'SEND_WS_MESSAGE':
-            return {
-              ws_msg   : action.msg
-            }
-            break;
+              action.wsId.send(action.wsMsg);
+              return {
+                wsId   : action.wsId,
+                wsUrl  : '',
+                wsMsg  : action.wsMsg
+              }
+              break;
+
             case 'CONNECT_WS':
-            return {
-              ws_url   : action.url
-            }
-            break;
+                return {
+                wsId   : new WebSocket(action.wsUrl),
+                wsUrl  : action.wsUrl,
+                wsMsg  : ''
+              }
+              break;
+
             case 'DISCONNECT_WS':
-            return {
-              ws_url   : action.url
-            }
-            break;
+              action.wsId.close();
+              return {
+                wsId   : null,
+                wsUrl  : '',
+                wsMsg  : ''
+              }
+              break;
 
             default:
-            return state
+              return state
           }
-          return state;
         }
-        store = Redux.createStore(reducer);
+
+        // Define App as combination of all reducers
+        const wsReduxApp = Redux.combineReducers({
+          msgReducer
+        });
+        const initialState = Immutable.List.of();
+
+        // Create Store
+        store = Redux.createStore(msgReducer, initialState);
 
         // Subscribe Variables
         store.subscribe(function(){
-          this.websocketURLRedux   = store.getState().ws_url;
-          this.clientMsgRedux      = store.getState().ws_msg;
+          _socketId   = store.getState().wsId;
+          _socketMsg  = store.getState().wsMsg;
+          _socketURL  = store.getState().wsUrl;
         })
-      },
+      }
 
+      attached(){
+        let that = this;
+        // that.connectSocket();
+      }
 
-      connectSocket: function(e) {
+      connectSocket() {
+        let that = this;
+        let protocol = "ws://";
         console.log("Arrived at connectSocket.");
-        var protocol = "ws://";
 
-        store.dispatch(
-          this.actions.connectWs(document.getElementById("websocket-url").getAttribute("value") + "/")
-        )
-
+        if (_socketId != null) {
+          that.updateTextBox("Websocket already active brah !");
+          return ;
+        }
+        
         if(window.location.protocol == "https:") {
           protocol = "wss://";
         }
+        let urlValue = protocol + document.getElementById("websocket-url").getAttribute("value") + "/";
+        store.dispatch(
+          that.wsMessageActions.connectWs(_socketId, urlValue)
+          )
 
-        var urlValue = document.getElementById("websocket-url").getAttribute("value") + "/";
-
-        socket = new WebSocket(protocol + urlValue);
-
-        socket.addEventListener("open", function(event) {
-          console.log(" Socket Connected ! ");
-          message.textContent = message.textContent + " Socket Connected ! " + "\n";
+        _socketId.addEventListener("open", function(event) {
+          that.updateTextBox(" Socket Connected ! ");
         });
 
         // Display messages received from the server
-        socket.addEventListener("message", function(event) {
-          message.textContent = message.textContent + "Server Says: " + event.data + "\n";
-          console.log(" Socket Message : " + message.textContent );
+        _socketId.addEventListener("message", function(event) {
+          that.updateTextBox("WS Server Says: " + event.data);
         });
 
         // Display any errors that occur
-        socket.addEventListener("error", function(event) {
-          console.log(" Socket ERRORRRRRR ");
+        _socketId.addEventListener("error", function(event) {
+          that.updateTextBox(" Socket ERRORRRRRR ");
         });
 
-        socket.addEventListener("close", function(event) {
-          console.log(" Socket CLOSED !!!!!!!! ");
+        _socketId.addEventListener("close", function(event) {
+          store.dispatch(
+            that.wsMessageActions.disconnectWs(_socketId)
+          )
+          that.updateTextBox(" Socket CLOSED !!!!!!!! ");
         });
+      }
 
-
-      },
-
-      disconnectSocket: function() {
+      disconnectSocket() {
+        let that = this;
         console.log("Closing message over socket");
-        socket.close();
-        message.textContent = message.textContent + "Socket Closed at :" + Date.now().toString() + "\n";
 
+        if(_socketId === null ) {
+          that.updateTextBox("WARNING : No Active Socket Connection Detected !");
+          return;
+        }
         store.dispatch(
-          this.actions.disconnectWs()
+          that.wsMessageActions.disconnectWs(_socketId)
         )
+        that.updateTextBox("Web Socket Connection Closed at :" + Date.now().toString());
+      }
 
-      },
-
-      sendMessage: function(e) {
+      sendMessage() {
+        let that = this;
         console.log("Sending message over socket");
-        var chatMessage = document.getElementById('chat-msg').value
-        var socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
 
-        socket.send(socketPayload);
-        message.textContent = message.textContent + "Client Says: " + socketPayload + "\n";
+        if(_socketId === null ) {
+          that.updateTextBox("WARNING : No Active Socket Connection Detected !");
+          return;
+        }
 
+        let chatMessage = document.getElementById('chat-msg').value
+        let socketPayload = "Message :" + chatMessage +  " | Sent at :" + Date.now().toString();
+        
         store.dispatch(
-          this.actions.sendWsMsg(socketPayload)
+          that.wsMessageActions.sendWsMsg( _socketId , socketPayload)
         )
+        that.updateTextBox("Client Says: " + socketPayload);
+      }
 
-      },
+      updateTextBox(msg) {
+        if ( message.textContent.split(/\r*\n/).length >= MAX_MSG_HISTORY ) {
+          message.textContent = '';
+        }
+        message.textContent = msg + "\n" + message.textContent;
+      }
 
-      actions: {
-        sendWsMsg: function(wsMessage) {
-          return {
-            type: 'SEND_WS_MESSAGE',
-            msg: wsMessage
-          };
-        },
-        connectWs: function(url) {
-          return {
-            type: 'CONNECT_WS',
-            url: url
-          };
-        },
-        disconnectWs: function() {
-          return {
-            type: 'DISCONNECT_WS',
-            url: ''
-          };
-        },
-      },
-
-    });
+    }
+    Polymer(WebsocketsRedux);
   </script>
 </dom-module>

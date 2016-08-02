@@ -3,7 +3,8 @@
   "main": "ws-component.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "redux": "https://cdnjs.cloudflare.com/ajax/libs/redux/1.0.1/redux.js"
+    "redux": "https://cdnjs.cloudflare.com/ajax/libs/redux/1.0.1/redux.js",
+    "immutable": "^3.8.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
