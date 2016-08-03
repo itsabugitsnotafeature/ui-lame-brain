@@ -20,35 +20,41 @@
 
     <script>
       suite('Basic ws-component tester !', function() {
+        var element;
+        setup(function() {
+          // get fresh instance of fixture before every test
+          element = fixture('basic');
+        });
 
         test('instantiating the element works', function() {
-          var element = fixture('basic');
+          debugger;
           assert.equal(element.is, 'ws-component');
         });
 
       });
 
       suite('Testing chat behavior without successful websocket connection', function() {
+        var element
+        setup(function() {
+          // get fresh instance of fixture before every test
+          element = fixture('basic');
+        });
 
         test('text box is empty when page loads.', function() {
-          var element = fixture('basic');
           assert.equal(message.textContent, '');
         });
 
         test('text box shows correct messages with failed sendMessage request ', function() {
-          var element = fixture('basic');
           element.sendMessage()
           assert.equal(message.textContent, 'WARNING : No Active Socket Connection Detected !\n');
         });
 
         test('text box shows correct messages with failed disconnectSocket request ', function() {
-          var element = fixture('basic');
           element.disconnectSocket();
           assert.equal(message.textContent, 'WARNING : No Active Socket Connection Detected !\n');
         });
 
         test('text box shows correct messages with failed connectSocket request ', function() {
-          var element = fixture('basic');
           element.connectSocket();
           element.connectSocket();
 
@@ -57,7 +63,6 @@
         });
 
         test('message box resets after 20 messages', function() {
-          var element = fixture('basic');
           for (var i=0 ; i<20 ; i++) {
             element.updateTextBox('message number : ' + i );
           }
@@ -65,7 +70,6 @@
         });
 
         test('message box adds new message to the top of the box', function() {
-          var element = fixture('basic');
           element.updateTextBox('old message');
           element.updateTextBox('new message');
           
@@ -75,7 +79,7 @@
 
         // Uncomment Following  as template to develip new test cases
         // test('test', function() {
-        //   var element = fixture('basic');
+        //   // var element = fixture('basic');
         //   debugger;
         // });
 
