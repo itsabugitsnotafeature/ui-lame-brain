@@ -27,13 +27,11 @@
         });
 
         test('instantiating the element works', function() {
-          debugger;
           assert.equal(element.is, 'ws-component');
         });
-
       });
 
-      suite('Testing chat behavior without successful websocket connection', function() {
+      suite('Testing chat behavior WITHOUT successful websocket connection', function() {
         var element
         setup(function() {
           // get fresh instance of fixture before every test
@@ -76,6 +74,58 @@
           assert.equal(message.textContent, 'new message\nold message\n');
           assert.notEqual(message.textContent, 'old message\new message\n');
         });
+      });
+
+      suite('Testing chat behavior WITH successful websocket connection', function() {
+        var element
+        setup(function() {
+          // get fresh instance of fixture before every test
+          element = fixture('basic');
+        });
+
+        test('text box is empty when page loads.', function() {
+          assert.equal(message.textContent, '');
+        });
+
+        test('text box shows correct message when websocket connects successfully.', function(done) {
+          assert.equal(message.textContent, '');
+          element.connectSocket();
+
+          expect(setTimeout(function(){
+            expect(message.textContent).to.be.equal(' Socket Connected ! \n');
+            return done();
+          }, 1000)).to.not.throw;
+        });
+
+        test('text box shows correct message user sends chat message.', function(done) {
+          var elem = element;
+          assert.equal(message.textContent, '');
+          
+          setTimeout(function(){
+            sendChat();
+          }, 1000);
+
+          function sendChat(){
+            document.getElementById('chat-msg').value = 'Test Client Message !'
+            elem.sendMessage();
+            expect(message.textContent).to.contain('Client Says: Message :Test Client Message ! | Sent at :');
+            done();
+          }
+
+        });
+
+        // test('text box shows correct message user sends multiple chat message.', function(done) {
+        //   debugger;
+        // });
+
+        // test('text box shows correct message user sends more than 20 chat message.', function(done) {
+        //   debugger;
+        // });
+
+        // test('text box shows correct message when user disconnects.', function(done) {
+        //   debugger;
+        // });
+
 
         // Uncomment Following  as template to develip new test cases
         // test('test', function() {
@@ -84,9 +134,6 @@
         // });
 
       });
-
-
-
 
     </script>
   </body>

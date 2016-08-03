@@ -3,10 +3,11 @@ var app = express();
 var expressWs = require('express-ws')(app);
 
 app.ws('/', function(ws,req){
-  ws.on('message', function(msg){
-    console.log("Server Received Message : " + msg)
-    ws.send(msg);
-  })
+	console.log("Client Request received !")
+	ws.on('message', function(msg){
+		console.log("Server Received Message : " + msg)
+		ws.send(msg);
+	})
 });
 
 

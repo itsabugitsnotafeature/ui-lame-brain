@@ -103,5 +103,7 @@ $ polymer test -p
 Now, open NEW TAB, and navigte to url : 
 "http://localhost:2000/components/ws-component/generated-index.html?cli_browser_id=0"
 
-
+NOTE : 
+To test suite without WS connection, comment out the second test suite.
+To test suite WITH WS connection, comment out the first test suite AND start the websocket server.
 
