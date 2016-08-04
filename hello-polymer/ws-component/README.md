@@ -42,7 +42,7 @@ Enjoy !!
 $ polymer test
 ```
 
-## Configuration for debugging tests 
+### Configuration for debugging tests 
 
 Edit the following file, "/ws-component/bower_components/mocha/mocha.js"
 
@@ -106,4 +106,19 @@ Now, open NEW TAB, and navigte to url :
 NOTE : 
 To test suite without WS connection, comment out the second test suite.
 To test suite WITH WS connection, comment out the first test suite AND start the websocket server.
+
+
+## References : 
+1. Polymer.or starter kit.
+
+2. Patterns in polymers by chris strom. And this link : 
+http://japhr.blogspot.com/2015/04/the-debugger-and-breakpoints-with-web.html
+
+3. Redux / Immutable Starter kit.
+
+4. Google code labs : 
+https://codelabs.developers.google.com/codelabs/polymer-es2015/index.html?index=..%2F..%2Findex#0
+
+
+
 

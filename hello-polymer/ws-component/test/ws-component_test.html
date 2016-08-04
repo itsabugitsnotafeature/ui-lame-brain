@@ -31,6 +31,7 @@
         });
       });
 
+      // PING : WS stays Off : Comment out this suite if WS server is ON.
       suite('Testing chat behavior WITHOUT successful websocket connection', function() {
         var element
         setup(function() {
@@ -76,6 +77,7 @@
         });
       });
 
+      // PONG : WS Turns ON : Comment out this suite if WS server is OFF.
       suite('Testing chat behavior WITH successful websocket connection', function() {
         var element
         setup(function() {
@@ -113,25 +115,6 @@
           }
 
         });
-
-        // test('text box shows correct message user sends multiple chat message.', function(done) {
-        //   debugger;
-        // });
-
-        // test('text box shows correct message user sends more than 20 chat message.', function(done) {
-        //   debugger;
-        // });
-
-        // test('text box shows correct message when user disconnects.', function(done) {
-        //   debugger;
-        // });
-
-
-        // Uncomment Following  as template to develip new test cases
-        // test('test', function() {
-        //   // var element = fixture('basic');
-        //   debugger;
-        // });
 
       });
 
