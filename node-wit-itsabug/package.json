@@ -1,0 +1,30 @@
+{
+  "name": "node-wit-itsbug",
+  "version": "1.0.0",
+  "description": "Bad bot failed attempt. This a learning experiment. ",
+  "keywords": [
+    "wit",
+    "wit.ai",
+    "bot",
+    "botengine",
+    "bots",
+    "itsabug",
+    "automation"
+    "credit: wit.ai"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "node examples/quickstart.js IQ7XQLV6QFOQSFRXIC3RTAPNUGFT4LIF",
+    "debug": "node-debug examples/quickstart.js IQ7XQLV6QFOQSFRXIC3RTAPNUGFT4LIF"
+  },
+  "repository": "https://github.com/itsabugitsnotafeature/ui-lame-brain",
+  "author": " itsabugitsnotafeature: In Collaboration with The Wit Team <help@wit.ai>",
+  "dependencies": {
+    "node-fetch": "^1.5.1",
+    "node-uuid": "^1.4.7",
+    "regex": "^0.1.1"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  }
+}
