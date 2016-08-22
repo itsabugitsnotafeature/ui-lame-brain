@@ -215,6 +215,7 @@ const actions = {
     });
   },
   get_wisdom({context,entities}) {
+    myLogger.debug('Invoked get_wisdom');
     return new Promise(function(resolve, reject) {
       grepWisdom().then(function(wisdom) {
         let wisery = wisdom
@@ -225,7 +226,7 @@ const actions = {
           .replace(/&quot/gm,"")
           .replace(/;/gm,"");
         context.wisdom = wisery;
-        print(context)
+        myLogger.debug('Returning context with get_wisdom payload  : ' + wisery);
         return resolve(context);
       })
     });
@@ -282,7 +283,13 @@ app.post('/webhook', (req, res) => {
               myLogger.debug('Bot context : ');
               printObj(context);
 
-              myLogger.debug('Waiting for next user messages');
+              myLogger.debug('Sending context.wisdom back to user');
+              sendTextMessage(sender, context.wisdom)
+
+              myLogger.debug('Sending back status code 200');
+              res.sendStatus(200);
+              
+              // myLogger.debug('Waiting for next user messages');
               // Updating the user's current session state
               sessions[sessionId].context = context;
               myLogger.debug('sessions[sessionId].context is now updated.');
@@ -290,18 +297,16 @@ app.post('/webhook', (req, res) => {
             })
             .catch((err) => {
               myLogger.error('Oops! Got an error from Wit: ', err.stack || err);
-              // console.error('Oops! Got an error from Wit: ', err.stack || err);
             })
           }
         } else {
-          // console.log('received event', JSON.stringify(event));
           myLogger.debug('received event', JSON.stringify(event));
         }
       });
     });
   }
   myLogger.debug('Sending back status code 200');
-  res.sendStatus(200);
+  // res.sendStatus(200);
 });
 
 
