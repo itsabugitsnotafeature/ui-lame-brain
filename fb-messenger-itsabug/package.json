@@ -16,5 +16,8 @@
     "node-fetch": "^1.6.0",
     "regex": "^0.1.1",
     "request": "^2.74.0"
+  },
+  "engines": {
+    "node": "6.3.1"
   }
 }

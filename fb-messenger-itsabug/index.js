@@ -98,6 +98,7 @@ app.get('/webhook/', function (req, res) {
 // Each session has an entry:
 // sessionId -> {fbid: facebookUserId, context: sessionState}
 const sessions = {};
+let msgSender;
 
 const findOrCreateSession = (fbid) => {
   let sessionId;
@@ -124,7 +125,6 @@ const grepWisdom = () => {
   });
 };
 
-//Bad - bot functions here
 const actions = {
   send(request, response) {
     const {sessionId, context, entities} = request;
@@ -132,6 +132,7 @@ const actions = {
     return new Promise(function(resolve, reject) {
       console.log('user said...', request.text);
       console.log('sending...', JSON.stringify(response));
+      sendTextMessage(msgSender, response.text)
       return resolve();
     });
   },
@@ -215,7 +216,6 @@ const actions = {
     });
   },
   get_wisdom({context,entities}) {
-    myLogger.debug('Invoked get_wisdom');
     return new Promise(function(resolve, reject) {
       grepWisdom().then(function(wisdom) {
         let wisery = wisdom
@@ -226,12 +226,13 @@ const actions = {
           .replace(/&quot/gm,"")
           .replace(/;/gm,"");
         context.wisdom = wisery;
-        myLogger.debug('Returning context with get_wisdom payload  : ' + wisery);
+        myLogger.debug('get_wisdom returning with wisdom :' + wisery);
         return resolve(context);
       })
     });
-  },
+  }
 };
+
 
 
 // Setting up our bot
@@ -256,6 +257,7 @@ app.post('/webhook', (req, res) => {
 
           myLogger.debug('Yay, we got a new message. ');
           const sender = event.sender.id;
+          msgSender = sender;
 
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
@@ -282,9 +284,9 @@ app.post('/webhook', (req, res) => {
               myLogger.debug('Wit engine execution finished.');
               myLogger.debug('Bot context : ');
               printObj(context);
-
+              
               myLogger.debug('Sending context.wisdom back to user');
-              sendTextMessage(sender, context.wisdom)
+              // sendTextMessage(sender, context.wisdom)
 
               myLogger.debug('Sending back status code 200');
               res.sendStatus(200);
@@ -305,7 +307,7 @@ app.post('/webhook', (req, res) => {
       });
     });
   }
-  myLogger.debug('Sending back status code 200');
+  myLogger.debug('/Webhook post call end.');
   // res.sendStatus(200);
 });
 
