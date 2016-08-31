@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>d3-poly test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../d3-poly.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <d3-poly></d3-poly>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('d3-poly', function() {
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'd3-poly');
+        });
+
+      });
+    </script>
+  </body>
+</html>
