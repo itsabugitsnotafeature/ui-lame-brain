@@ -47,7 +47,7 @@ var timeLabels = svg.selectAll(".timeLabel")
   })
   .attr("y", 0)
   .style("text-anchor", "middle")
-  .attr("transform", "translate(" + gridSize / 2 + ", -6)")             // Step 3
+  .attr("transform", "translate(" + gridSize / 2 + ", -6)")  
   .attr("class", function(d, i) {
     return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis");
   });
@@ -132,17 +132,17 @@ var heatmapChart = function(tsvFile) {
       legend.exit().remove();
 
     });
-};                      // Step 4
+}; 
 
 heatmapChart(datasets[0]);
 
 var datasetpicker = d3.select("#dataset-picker").selectAll(".dataset-button")
-  .data(datasets);                  // Step 5
+  .data(datasets);   
 
-datasetpicker.enter()                           // Step 6
+datasetpicker.enter()   
   .append("input")
   .attr("value", function(d) {
-    return "Dataset " + d                               // Step 7,8
+    return "Dataset " + d     
   })
   .attr("type", "button")
   .attr("class", "dataset-button")
