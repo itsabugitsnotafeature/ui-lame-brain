@@ -33,6 +33,9 @@ class Irma {
         this.controlYear 		= year;
 		    this.controlCyclePeriod = cycle;
         this.daysOfVisit 		= visitDuration;
+        this.yearlyPredictions = {};
+        myLogger.debug("New Object Created !");
+        // this.calculateFutureVisits();
     }
 
     getDate(url) {
@@ -90,22 +93,44 @@ class Irma {
       let thisUser = this;
       myLogger.debug("calculateFutureVisits : Called.");
 
-    	let yearlyPredictions = {};
     	let predictions = {};
-    	yearlyPredictions.VisitMap = new Array();
+    	thisUser.yearlyPredictions.VisitMap = new Array();
       
       thisUser.getPredictionsArray()
         .then(herPredictions => {
-          yearlyPredictions.VisitMap = herPredictions;
+          thisUser.yearlyPredictions.VisitMap = herPredictions;
           myLogger.debug("List of her predictions..." );
-          myLogger.debug( JSON.stringify(yearlyPredictions, 2, null) );
+          myLogger.debug( JSON.stringify(thisUser.yearlyPredictions, 2, null) );
         });
     }
+
+    queryVisit(month, year) {
+      let thisUser = this;
+      let hits = new Array();
+
+      if(thisUser.yearlyPredictions.VisitMap.length === 0) {
+        // this.calculateFutureVisits();
+        setTimeout(function () {
+            thisUser.queryVisit(month, year);
+        }, 5000);
+      } else {
+        let predictions = thisUser.yearlyPredictions.VisitMap;
+        myLogger.debug("queryDate : Called.");
+
+        predictions.forEach(function(monthlyPrediction) {
+          myLogger.debug("forEach is : " + JSON.stringify(monthlyPrediction , 2, null) );
+        });
+      }
+    }
+
+
 }
 
 const inst = new Irma();
 inst.calculateFutureVisits();
-myLogger.debug("Okay I ended." ); 
+
+let hit = inst.queryVisit("November","2016");
+myLogger.debug("HIT is : " + hit );
 
 
 
@@ -186,7 +211,3 @@ var month = date.getMonth();
 OUTPUT : 7
 
 */
-
-
-
-
