@@ -6,31 +6,14 @@ const fetch = require('node-fetch');
 let myLogger = new log.Logger(log.DEBUG);
 let dateRegEx = "<h2>Result: (.*)<\/h2>";
 
+const T_DATE = 25 ;
+const T_MONTH = 8 ;
+const T_YEAR = 2016 ;
+const T_CYCLE = 2016 ;
+const T_DURATION = 5 ;
+
 /*
-	Template : 
-		http://www.timeanddate.com/date/dateadded.html?m1=_controlMonth_12&d1=_controlDate_22&y1=_controlYear_&type=add&ay=&am=&aw=&ad=_controlCyclePeriod_
-
-	Live Examples : 
-      // Incorrect data 
-		1. http://www.timeanddate.com/date/dateadded.html?m1=08'&d125=&y1=2016&type=add&ay=&am=&aw=&ad=26'
-			Result String "<h2>Result: Thursday, September 1, 2016</h2>"
-
-      // Correct data 
-		2. http://www.timeanddate.com/date/dateadded.html?m1=8&d1=25&y1=2016&type=add&ay=&am=&aw=&ad=26&rec='
-			Result String "<h2>Result: Tuesday, September 20, 2016</h2>"
-      <h2>Result: Tuesday, September 20, 2016</h2>
-		2. 
-
-	Code Example : 
-		const DATE_API_URL = 'http://www.timeanddate.com/date/dateadded.html?m1=' + 
-								controlMonth.toString() + 
-								'&d1=' + 
-								controlDate.toString() + 
-								'&y1=' + 
-								controlYear.toString() + 
-								'&type=add&ay=&am=&aw=&ad=' + 
-								controlCyclePeriod.toString();
-
+  
 */ 
 
 
@@ -40,7 +23,11 @@ class Irma {
 		Constructor : Returns new object initialized with master data, month, year, cycle time and visitDuration
     Default returns mater date time 
 	*/ 
-    constructor(date=25, month=8, year=2016, cycle=26, visitDuration=5) {
+    constructor(  date = T_DATE, 
+                  month=T_MONTH, 
+                  year=T_YEAR, 
+                  cycle=T_CYCLE, 
+                  visitDuration=T_DURATION) {
         this.controlDate 		= date;
         this.controlMonth 		= month;
         this.controlYear 		= year;
@@ -75,6 +62,7 @@ class Irma {
                '&type=add&ay=&am=&aw=&ad=' + 
                delta.toString();
     }
+
     getPredictionsArray() {
       let thisUser = this;
       let predictionsArray = new Array();
@@ -97,6 +85,7 @@ class Irma {
         }
       });
     }
+
     calculateFutureVisits() {
       let thisUser = this;
       myLogger.debug("calculateFutureVisits : Called.");
