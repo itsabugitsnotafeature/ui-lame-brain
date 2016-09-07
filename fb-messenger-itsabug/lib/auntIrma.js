@@ -51,7 +51,7 @@ class Irma {
 
         newDate.setDate(newDate.getDate() + delta);
 
-        datapoint.string  = newDate.toString()
+        datapoint.string  = newDate.toDateString();
         datapoint.date    = newDate.getDate() ;
         datapoint.month   = newDate.getMonth() ;
         datapoint.year    = newDate.getFullYear() ; ;
@@ -70,28 +70,36 @@ class Irma {
             
       thisUser.yearlyPredictions.VisitMap = thisUser.getIrmaPredictionsArray();
       myLogger.debug("List of her predictions..." );
-      myLogger.debug( JSON.stringify(thisUser.yearlyPredictions, 2, null) );
+      myLogger.debug( JSON.stringify(thisUser.yearlyPredictions, null, 2) );
     }
 
-    queryVisit(month, year) {
+    /*
+      Returns Visits for given month in a year.
+    */ 
+    askIrmaByMonth(queryMonth) {
       let thisUser = this;
       let hits = new Array();
+      let forecast = '';
+      
+      myLogger.debug("AskIrma : Called with query for - " + (new Date(queryMonth)).toString() );
+      hits = thisUser.yearlyPredictions.VisitMap.filter(function(monthlyVisit) {
+        return ( (new Date(queryMonth).getMonth()) === monthlyVisit.month && (new Date(queryMonth).getFullYear()) === monthlyVisit.year );
+      })
+      
+      myLogger.debug("hits Found is : " + JSON.stringify(hits , null, 2) );
 
-      if(thisUser.yearlyPredictions.VisitMap.length === 0) {
-        // this.calculateFutureVisits();
-        setTimeout(function () {
-            thisUser.queryVisit(month, year);
-        }, 5000);
-      } else {
-        let predictions = thisUser.yearlyPredictions.VisitMap;
-        myLogger.debug("queryDate : Called.");
-
-        for ( let i = 0 ; i < thisUser.yearlyPredictions.VisitMap.length ; i++ ) {
-          myLogger.debug("I IS : " + i );
-          myLogger.debug("FOR LOOP  is : " + JSON.stringify(thisUser.yearlyPredictions.VisitMap[i] , 2, null) );
-          myLogger.debug("FOR LOOP  is : " + JSON.stringify(thisUser.yearlyPredictions.VisitMap[i][(i+1).toString()] , 2, null) );
-        }
+      if ( hits.length === 0 ) {
+        forecast = ' Looks like we have ourselves an incorrect month love. Lets quickly check it and try agina ;-) ';
+      } else if  ( hits.length === 1 ) {
+        forecast = 'Alrighty, I got what you looking for. \n Irma is planning to visit you the day after ' + hits[0].string;
+      } else if  ( hits.length === 2 ) {
+        forecast = 'Well well, what do we have here. I\'m all set and packed to visit you twice this month sweetie' + 
+        '\n My first visit is the day after ' + hits[0].string + 
+        '\n and second visit is the day after ' + hits[1].string;
       }
+
+      forecast += "\n\n XOXO\n Aunt Irma."
+      return forecast;
     }
 
 
@@ -99,7 +107,7 @@ class Irma {
 
 const inst = new Irma();
 
-
+console.log(inst.askIrmaByMonth(1483344000000))
 
 
 
