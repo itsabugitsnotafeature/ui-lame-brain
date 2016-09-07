@@ -9,6 +9,7 @@ let dateRegEx = "<h2>Result: (.*)<\/h2>";
 const T_DATE  = 25 ;
 const T_MONTH = 8 ;
 const T_YEAR  = 2016 ;
+
 const T_CYCLE = 26 ;
 const T_DURATION = 5 ;
 
@@ -23,15 +24,12 @@ class Irma {
 		Constructor : Returns new object initialized with master data, month, year, cycle time and visitDuration
     Default returns mater date time 
 	*/ 
-    constructor(  date          = T_DATE, 
-                  month         = T_MONTH, 
-                  year          = T_YEAR, 
-                  cycle         = T_CYCLE, 
-                  visitDuration = T_DURATION ){
-
+    constructor(date = T_DATE, month = T_MONTH, year = T_YEAR, cycle = T_CYCLE, visitDuration = T_DURATION){
         this.controlDate 		= date;
-        this.controlMonth 		= month;
+        this.controlMonth 	= month;
         this.controlYear 		= year;
+        this.controlEpoch   = new Date(this.controlYear.toString() + '.' + this.controlMonth.toString() + '.' + this.controlDate.toString()).getTime()
+
 		    this.controlCyclePeriod = cycle;
         this.daysOfVisit 		= visitDuration;
         this.yearlyPredictions = {};
@@ -41,78 +39,38 @@ class Irma {
         this.calculateFutureVisits();
     }
 
-    getDate(url) {
-      return fetch(url)
-      .then(rsp => rsp.text() )
-      .then(body => {
-        return body.match(/<h2>Result: (.*)<\/h2>/g).toString().replace(/<h2>Result: /gm,"").replace(/<\/h2>/gm,"");
-      });
-    }
-
-    showControlParams() {
-        let thisUser = this;
-        myLogger.debug("showControlParams : Called.");
-        myLogger.debug(`\nDate:${thisUser.controlDate},\nMonth: ${thisUser.controlMonth},\nYear: ${thisUser.controlYear},\nCycle Period ${thisUser.controlCyclePeriod},\nDays Of Visit: ${thisUser.daysOfVisit}\n`);
-    }
-
-    getDeltaDateApi(delta) {
-        let thisUser = this;
-        // myLogger.debug("getDeltaDateApi : Called.");
-
-        return 'http://www.timeanddate.com/date/dateadded.html?m1=' + 
-               thisUser.controlMonth.toString() + 
-               '&d1=' + 
-               thisUser.controlDate.toString() + 
-               '&y1=' + 
-               thisUser.controlYear.toString() + 
-               '&type=add&ay=&am=&aw=&ad=' + 
-               delta.toString();
-    }
-
-
-    getPredictionsArray() {
+    getIrmaPredictionsArray() {
       let thisUser = this;
       let predictionsArray = new Array();
       let i = 1;
-      let doublyMonthDetected = false;
 
-      return new Promise(function(resolve, reject) {
-        for( let i = 1 ; i < (thisUser.IRMA_MAX_RECORD + 1 ) ; i++ ) {
-          let delta = ( i * thisUser.controlCyclePeriod );
-          let deltaUrl = thisUser.getDeltaDateApi(delta);
-          thisUser.getDate(deltaUrl.toString())
-            .then(date => {
-              let receivedDate = new Date(date);
-              let datapoint = {};
-              datapoint.string  = receivedDate.toString()
-              datapoint.date    = receivedDate.getDate() ;
-              datapoint.month   = receivedDate.getMonth() ;
-              datapoint.year    = receivedDate.getFullYear() ; ;
-              datapoint.epoch   = receivedDate.getTime() ;
-              datapoint.index   = i ;
-              
-              predictionsArray.push(datapoint);
-              if ( predictionsArray.length === thisUser.IRMA_MAX_RECORD ) {
-                return resolve(predictionsArray);  
-              }
-          })
-        }
-      });
+      for ( let i = 1 ; i < (thisUser.IRMA_MAX_RECORD + 1 ) ; i++ ) {
+        let delta = ( i * thisUser.controlCyclePeriod );
+        let newDate = new Date(thisUser.controlEpoch);
+        let datapoint = {};
+
+        newDate.setDate(newDate.getDate() + delta);
+
+        datapoint.string  = newDate.toString()
+        datapoint.date    = newDate.getDate() ;
+        datapoint.month   = newDate.getMonth() ;
+        datapoint.year    = newDate.getFullYear() ; ;
+        datapoint.epoch   = newDate.getTime() ;
+        datapoint.index   = i ;
+        
+        predictionsArray.push(datapoint);
+      }
+      return predictionsArray;  
     }
 
     calculateFutureVisits() {
       let thisUser = this;
       myLogger.debug("calculateFutureVisits : Called.");
-
-    	let predictions = {};
     	thisUser.yearlyPredictions.VisitMap = new Array();
-      
-      thisUser.getPredictionsArray()
-        .then(herPredictions => {
-          thisUser.yearlyPredictions.VisitMap = herPredictions;
-          myLogger.debug("List of her predictions..." );
-          myLogger.debug( JSON.stringify(thisUser.yearlyPredictions, 2, null) );
-        });
+            
+      thisUser.yearlyPredictions.VisitMap = thisUser.getIrmaPredictionsArray();
+      myLogger.debug("List of her predictions..." );
+      myLogger.debug( JSON.stringify(thisUser.yearlyPredictions, 2, null) );
     }
 
     queryVisit(month, year) {
@@ -140,9 +98,6 @@ class Irma {
 }
 
 const inst = new Irma();
-
-// let hit = inst.queryVisit("November","2016");
-// myLogger.debug("HIT is : " + hit );
 
 
 
@@ -178,20 +133,12 @@ Example of date time json structure :
 {
   "VisitMap": [
     {
-      "string": "Wed Dec 07 2016 00:00:00 GMT-0800 (PST)",
-      "date": 7,
-      "month": 11,
+      "string": "Tue Sep 20 2016 00:00:00 GMT-0700 (PDT)",
+      "date": 20,
+      "month": 8,
       "year": 2016,
-      "epoch": 1481097600000,
-      "index": 4
-    },
-    {
-      "string": "Sun Apr 16 2017 00:00:00 GMT-0700 (PDT)",
-      "date": 16,
-      "month": 3,
-      "year": 2017,
-      "epoch": 1492326000000,
-      "index": 9
+      "epoch": 1474354800000,
+      "index": 1
     },
     {
       "string": "Sun Oct 16 2016 00:00:00 GMT-0700 (PDT)",
@@ -202,20 +149,28 @@ Example of date time json structure :
       "index": 2
     },
     {
-      "string": "Wed Jun 07 2017 00:00:00 GMT-0700 (PDT)",
-      "date": 7,
-      "month": 5,
-      "year": 2017,
-      "epoch": 1496818800000,
-      "index": 11
+      "string": "Fri Nov 11 2016 00:00:00 GMT-0800 (PST)",
+      "date": 11,
+      "month": 10,
+      "year": 2016,
+      "epoch": 1478851200000,
+      "index": 3
     },
     {
-      "string": "Thu Feb 23 2017 00:00:00 GMT-0800 (PST)",
-      "date": 23,
-      "month": 1,
+      "string": "Wed Dec 07 2016 00:00:00 GMT-0800 (PST)",
+      "date": 7,
+      "month": 11,
+      "year": 2016,
+      "epoch": 1481097600000,
+      "index": 4
+    },
+    {
+      "string": "Mon Jan 02 2017 00:00:00 GMT-0800 (PST)",
+      "date": 2,
+      "month": 0,
       "year": 2017,
-      "epoch": 1487836800000,
-      "index": 7
+      "epoch": 1483344000000,
+      "index": 5
     },
     {
       "string": "Sat Jan 28 2017 00:00:00 GMT-0800 (PST)",
@@ -226,36 +181,12 @@ Example of date time json structure :
       "index": 6
     },
     {
-      "string": "Fri Nov 11 2016 00:00:00 GMT-0800 (PST)",
-      "date": 11,
-      "month": 10,
-      "year": 2016,
-      "epoch": 1478851200000,
-      "index": 3
-    },
-    {
-      "string": "Tue Sep 20 2016 00:00:00 GMT-0700 (PDT)",
-      "date": 20,
-      "month": 8,
-      "year": 2016,
-      "epoch": 1474354800000,
-      "index": 1
-    },
-    {
-      "string": "Mon Jul 03 2017 00:00:00 GMT-0700 (PDT)",
-      "date": 3,
-      "month": 6,
+      "string": "Thu Feb 23 2017 00:00:00 GMT-0800 (PST)",
+      "date": 23,
+      "month": 1,
       "year": 2017,
-      "epoch": 1499065200000,
-      "index": 12
-    },
-    {
-      "string": "Fri May 12 2017 00:00:00 GMT-0700 (PDT)",
-      "date": 12,
-      "month": 4,
-      "year": 2017,
-      "epoch": 1494572400000,
-      "index": 10
+      "epoch": 1487836800000,
+      "index": 7
     },
     {
       "string": "Tue Mar 21 2017 00:00:00 GMT-0700 (PDT)",
@@ -266,12 +197,100 @@ Example of date time json structure :
       "index": 8
     },
     {
-      "string": "Mon Jan 02 2017 00:00:00 GMT-0800 (PST)",
-      "date": 2,
-      "month": 0,
+      "string": "Sun Apr 16 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 16,
+      "month": 3,
       "year": 2017,
-      "epoch": 1483344000000,
-      "index": 5
+      "epoch": 1492326000000,
+      "index": 9
+    },
+    {
+      "string": "Fri May 12 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 12,
+      "month": 4,
+      "year": 2017,
+      "epoch": 1494572400000,
+      "index": 10
+    },
+    {
+      "string": "Wed Jun 07 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 7,
+      "month": 5,
+      "year": 2017,
+      "epoch": 1496818800000,
+      "index": 11
+    },
+    {
+      "string": "Mon Jul 03 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 3,
+      "month": 6,
+      "year": 2017,
+      "epoch": 1499065200000,
+      "index": 12
+    },
+    {
+      "string": "Sat Jul 29 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 29,
+      "month": 6,
+      "year": 2017,
+      "epoch": 1501311600000,
+      "index": 13
+    },
+    {
+      "string": "Thu Aug 24 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 24,
+      "month": 7,
+      "year": 2017,
+      "epoch": 1503558000000,
+      "index": 14
+    },
+    {
+      "string": "Tue Sep 19 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 19,
+      "month": 8,
+      "year": 2017,
+      "epoch": 1505804400000,
+      "index": 15
+    },
+    {
+      "string": "Sun Oct 15 2017 00:00:00 GMT-0700 (PDT)",
+      "date": 15,
+      "month": 9,
+      "year": 2017,
+      "epoch": 1508050800000,
+      "index": 16
+    },
+    {
+      "string": "Fri Nov 10 2017 00:00:00 GMT-0800 (PST)",
+      "date": 10,
+      "month": 10,
+      "year": 2017,
+      "epoch": 1510300800000,
+      "index": 17
+    },
+    {
+      "string": "Wed Dec 06 2017 00:00:00 GMT-0800 (PST)",
+      "date": 6,
+      "month": 11,
+      "year": 2017,
+      "epoch": 1512547200000,
+      "index": 18
+    },
+    {
+      "string": "Mon Jan 01 2018 00:00:00 GMT-0800 (PST)",
+      "date": 1,
+      "month": 0,
+      "year": 2018,
+      "epoch": 1514793600000,
+      "index": 19
+    },
+    {
+      "string": "Sat Jan 27 2018 00:00:00 GMT-0800 (PST)",
+      "date": 27,
+      "month": 0,
+      "year": 2018,
+      "epoch": 1517040000000,
+      "index": 20
     }
   ]
 }
