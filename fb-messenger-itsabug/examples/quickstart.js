@@ -15,6 +15,16 @@ try {
   Wit = require('node-wit').Wit;
 }
 
+let Visitor = null;
+let visitorsList = {};
+
+try {
+  Visitor = require('../lib/auntIrma');
+} catch (e) {
+  console.error('Unable to get Irma Instance.')
+}
+visitorsList.defaultKryptonite = new Visitor.Irma();
+
 const accessToken = (() => {
   return process.env.WIT_TOKEN ;
 })();
@@ -152,7 +162,18 @@ const actions = {
       })
     });
   },
+  askIrmasSchedule({context,entities}) {
+    if ( Object.keys(visitorsList).length < 1 ) { 
+      return "Holy shit, Something is wrong with Aunt Irma. \nCall the Doctor, QUICK !!!!"
+    }
+    console.log(" Calculating prediction for current moment of time " + visitorsList.defaultKryptonite.askIrmaByMonth(Date.now()) ) ;
+    return new Promise(function(resolve, reject) {      
+      return resolve(context);
+    });
+  },
 };
+
 
 const client = new Wit({accessToken, actions});
 client.interactive();
+actions.askIrmasSchedule("{'context','entities'}");
